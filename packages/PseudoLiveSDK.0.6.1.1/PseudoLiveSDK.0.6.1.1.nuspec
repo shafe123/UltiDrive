@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>PseudoLiveSDK</id>
+    <version>0.6.1.1</version>
+    <title>Pseudo Live SDK</title>
+    <authors>Hiroaki SHIBUKI</authors>
+    <owners>Hiroaki SHIBUKI</owners>
+    <licenseUrl>http://pseudolivesdk.codeplex.com/license</licenseUrl>
+    <projectUrl>http://pseudolivesdk.codeplex.com/</projectUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>The Pseudo Live SDK is a clone of Live SDK, supports WPF, Windows.Forms, and Console Application.</description>
+    <releaseNotes>2012-05-20 v0.6.1.1</releaseNotes>
+    <copyright>Copyright (c) 2012</copyright>
+    <tags>Pseudo SDK REST API Windows Live ID Hotmail Messenger SkyDrive</tags>
+  </metadata>
+</package>

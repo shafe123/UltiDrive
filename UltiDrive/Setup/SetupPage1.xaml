@@ -1,0 +1,25 @@
+﻿<Page
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:UltiDrive.Setup" x:Class="UltiDrive.Setup.SetupPage1" 
+      mc:Ignorable="d" Title="SetupPage1">
+
+    <Page.Resources>
+        <local:CountGreaterThanZeroConverter x:Key="CountGreaterThanZeroConverter"/>
+    </Page.Resources>
+
+    <StackPanel>
+        <Label Content="Welcome to UltiDrive!" />
+        <Label Content="Please select which services you would like to sign-in to:" />
+        <Label Content="You can always select more later." />
+        <CheckBox x:Name="cbSkyDrive" Content="SkyDrive" Click="cbSkyDrive_Checked" />
+        <CheckBox x:Name="cbGoogleDrive" Content="Google Drive" Click="cbGoogleDrive_Checked" />
+        <!--<CheckBox x:Name="cbUbuntuOne" Content="UbuntuOne" Click="cbUbuntuOne_Checked" />-->
+        <CheckBox x:Name="cbDropbox" Content="Dropbox" Click="cbDropbox_Checked" />
+        <CheckBox x:Name="cbBox" Content="Box" Click="cbBox_Checked"/>
+        <Button Margin="0,15,0,0" x:Name="nextButton" Content="-&gt;" Click="nextButton_Click" IsDefault="True" 
+			IsEnabled="{Binding Count, Converter={StaticResource CountGreaterThanZeroConverter}}" Style="{DynamicResource UDBTNStyle1}"/>
+    </StackPanel>
+</Page>
