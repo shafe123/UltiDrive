@@ -16,6 +16,7 @@ namespace UltiDrive.GoogleDrive
     {
         public string id { get; set; }
         public string title { get; set; }
+        public string originalFilename { get; set; }
         public string downloadUrl { get; set; }
         public DateTime modifiedDate { get; set; }
         public List<Parent> parents { get; set; }

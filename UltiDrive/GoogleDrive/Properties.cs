@@ -19,7 +19,21 @@ namespace UltiDrive.GoogleDrive
         {
             RestRequest request = new RestRequest(method);
             //request.AddParameter("access_token", GoogleDriveRefreshInfo.Instance.AccessToken);
+            request.RequestFormat = DataFormat.Json;
             request.OnBeforeDeserialization = resp => { resp.ContentType = "application/json"; };
+
+            return request;
+        }
+
+        public static RestRequest FilesRequest(Method method)
+        {
+            RestRequest request = new RestRequest(method);
+            request.RequestFormat = DataFormat.Json;
+            request.Resource = "files";
+            request.AddParameter("key", GoogleDriveRefreshInfo.Instance.AccessToken);
+            request.AddParameter("setModifiedDate", "true");
+            request.OnBeforeDeserialization = resp => { resp.ContentType = "application/json"; };
+            
 
             return request;
         }

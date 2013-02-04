@@ -32,13 +32,5 @@ namespace UltiDrive.GoogleDrive
                 return App.AppFolder + "\\GoogleDrive.json";
             }
         }
-
-        public static FileIds fileIds;
-
-        public class FileIds
-        {
-            public List<File> items { get; set; }
-            public string nextPageToken { get; set; }
-        }
     }
 }

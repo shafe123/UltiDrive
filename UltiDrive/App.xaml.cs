@@ -221,7 +221,7 @@ namespace UltiDrive
 
         void App_Exit(object sender, ExitEventArgs e)
         {
-            //System.IO.Directory.Delete(AppFolder, true);
+            System.IO.Directory.Delete(AppFolder, true);
         }
 
         private void skydrive_checkInitiated(object sender, LiveOperationCompletedEventArgs e)

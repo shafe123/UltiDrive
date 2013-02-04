@@ -62,75 +62,35 @@ namespace UltiDrive.GoogleDrive
             GoogleDriveRefreshInfo.Instance = null;
         }
 
-        public static void GetAllFiles()
-        {
-            RestClient client = GoogleDrive.Clients.BaseClient();
-            RestRequest request = Requests.BaseRequest(Method.GET);
-            request.Resource = "files";
-            request.AddParameter("fields", "items(downloadUrl,id,title),nextPageToken");
-
-            Utilities.FileIds ids = MakeRequest<Utilities.FileIds>(client, request);
-
-            while (ids != null && ids.nextPageToken != null && ids.nextPageToken != "")
-            {
-                request = Requests.BaseRequest(Method.GET);
-                request.Resource = "files";
-                request.AddParameter("fields", "items(id,title),nextPageToken");
-                request.AddParameter("pageToken", ids.nextPageToken);
-                Utilities.FileIds tempIds = MakeRequest<Utilities.FileIds>(client, request);
-
-                if (tempIds == null || tempIds.items == null)
-                    break;
-                
-                ids.items.AddRange(tempIds.items);
-                ids.nextPageToken = tempIds.nextPageToken;
-            }
-
-            Utilities.fileIds = ids;
-        }
-
         public static File UploadFile(string fileName, string filePath)
         {
             RestClient client = Clients.UploadClient();
-            RestRequest request = Requests.BaseRequest(Method.POST);
+            RestRequest request = Requests.FilesRequest(Method.POST);
             request.Resource = "files";
-            request.AddParameter("uploadType", "media");
 
-            //request.RequestFormat = DataFormat.Json;
-            //File uFile = new File()
-            //{
-            //    title = fileName
-            //};
-            //request.AddBody(uFile);
+            File newFile = new File() { title = fileName, originalFilename = fileName };
+            request.AddBody(newFile);
 
-            byte[] file = System.IO.File.ReadAllBytes(filePath);
+            File response = MakeRequest<File>(client, request);
 
-            request.AddFile("file", file, fileName);
+            client = Clients.UploadClient();
+            request = Requests.FilesRequest(Method.PUT);
+            request.Resource += "/" + response.id;
+            request.AddFile(fileName, filePath);
 
-            File result = MakeRequest<File>(client, request);
-            return result;
+            IRestResponse response2 = MakeRequest(client, request);
+
+            return response;
         }
 
         public static void DownloadAllFiles(string downloadLocation)
         {
-            GetAllFiles();
 
-            foreach (File f in Utilities.fileIds.items)
-            {
-                if (f.downloadUrl != null)
-                    DownloadFile(f.downloadUrl, downloadLocation + "\\" + f.title);
-            }
         }
 
         public static void DownloadFile(string downloadUrl, string filePath)
         {
-            RestClient client = new RestClient();
-            client.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(GoogleDrive.GoogleDriveRefreshInfo.Instance.AccessToken);
-            RestRequest request = Requests.BaseRequest(Method.GET);
-            request.Resource = downloadUrl;
 
-            IRestResponse response = MakeRequest(client, request);
-            System.IO.File.WriteAllBytes(filePath, response.RawBytes);
         }
 
         private static IRestResponse MakeRequest(RestClient client, RestRequest request)
