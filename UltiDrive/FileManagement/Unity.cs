@@ -11,7 +11,9 @@ using System.Windows.Forms;
 
 namespace UltiDrive.FileManagement
 {
-    class Unity
+    public enum FileOperation { Delete, Rename, Update, Upload, Download }
+
+    public class Unity
     {
         public static bool DeleteFile(string fileName)
         {
@@ -98,7 +100,7 @@ namespace UltiDrive.FileManagement
 
             indexEntities db = new indexEntities();
             file uploadFile = (from f in db.files
-                               where f.origFileName == filePath
+                               where (f.rootFolder + f.relativeFilePath) == filePath
                                select f).First();
 
             bool result = true;
@@ -111,22 +113,18 @@ namespace UltiDrive.FileManagement
                         break;
                     case "GoogleDrive":
                         throw new NotImplementedException();
-                        break;
                     case "SkyDrive":
                         SkyDrive.Api.UploadFile(uploadFile.guid, filePath);
                         break;
                     case "UbuntuOne":
                         throw new NotImplementedException();
-                        break;
                     case "Box":
                         throw new NotImplementedException();
-                        break;
                     default:
                         throw new Exception("how'd you manage that one?");
-                        break;
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 result = false;
             }
@@ -137,7 +135,6 @@ namespace UltiDrive.FileManagement
         public static string UploadFile(string guid, string filePath, StorageServices service)
         {
             indexEntities db = new indexEntities();
-            Exception error = null;
             string rootFolder = FileStructure.Index.IndexRoots.Where(root => filePath.Contains(root.RootFolderName))
                                                                 .First().RootFolderName;
             string serviceName = Enum.GetName(typeof(StorageServices), service);
@@ -152,7 +149,7 @@ namespace UltiDrive.FileManagement
             };
 
             string[] paths = filePath.Split('\\');
-            bool result = true;
+
             try
             {
                 switch (service)
@@ -170,16 +167,14 @@ namespace UltiDrive.FileManagement
                         throw new NotImplementedException();
                     case StorageServices.Box:
                         throw new NotImplementedException();
-                        break;
                     default:
                         throw new Exception("how'd you manage that one?");
 
                 }
                 return "Test";
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                result = false;
                 return "Failure";
             }
         }
@@ -190,7 +185,7 @@ namespace UltiDrive.FileManagement
             string guid = "";
             string serviceStr = "";
             indexEntities db = new indexEntities();
-            var dbFile = (from f in db.files
+            file dbFile = (from f in db.files
                          where f.origFileName == fileName
                          select f).First();
             
@@ -218,12 +213,11 @@ namespace UltiDrive.FileManagement
                             throw new NotImplementedException();
                         case StorageServices.Box:
                             throw new NotImplementedException();
-                            break;
                         default:
                             throw new Exception("how'd you manage that one?");
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     result = false;
                 }
@@ -235,6 +229,11 @@ namespace UltiDrive.FileManagement
             }
 
             return result;
+        }
+
+        private static void UpdateRemoteIndex(file file, FileOperation op)
+        {
+
         }
     }
 }

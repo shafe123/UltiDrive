@@ -29,7 +29,7 @@ namespace FileManagement
                 return info.service;
             }
             // Occurs if there is not ANY storage left
-            catch (InvalidOperationException e)
+            catch (InvalidOperationException)
             {
                 return StorageServices.Empty;
             }

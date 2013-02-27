@@ -98,7 +98,7 @@ namespace FileManagement
                     db.files.Add(newFile);
                     db.SaveChanges();
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     FileStructure.Index.UnManagedFiles.Add(file.FullName);
                 }

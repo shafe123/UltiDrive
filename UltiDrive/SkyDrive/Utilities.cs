@@ -97,7 +97,6 @@ namespace UltiDrive.SkyDrive
             JavaScriptSerializer ser = new JavaScriptSerializer();
             Files.RootObject data = ser.Deserialize<Files.RootObject>(e.RawResult);
 
-            bool foundTxt = false;
             bool foundFolder = false;
             foreach (Files.Datum listItem in data.data)
             {
