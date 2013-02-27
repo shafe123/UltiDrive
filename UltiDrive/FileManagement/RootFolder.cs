@@ -71,13 +71,29 @@ namespace FileManagement
 
                     UltiDrive.file newFile = new UltiDrive.file()
                     {
-                        guid = Guid.NewGuid().ToString(),
                         lastModified = file.LastWriteTime,
                         origFileName = file.Name,
                         relativeFilePath = file.FullName.Replace(this.RootFolderName, ""),
                         rootFolder = this.RootFolderName,
                         service = service,
                     };
+
+
+                    Exception error = null;
+                    do
+                    {
+                        error = null;
+                        newFile.guid = Guid.NewGuid().ToString();
+                        try
+                        {
+                            db.files.Add(newFile);
+                            db.SaveChanges();
+                        }
+                        catch (Exception e)
+                        {
+                            error = e;
+                        }
+                    } while (error != null);
 
                     db.files.Add(newFile);
                     db.SaveChanges();

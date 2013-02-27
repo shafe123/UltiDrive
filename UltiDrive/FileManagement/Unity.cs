@@ -151,25 +151,7 @@ namespace UltiDrive.FileManagement
                 relativeFilePath = filePath.Replace(rootFolder, ""),
             };
 
-            do
-            {
-                error = null;
-                newFile.guid = guid;
-                try
-                {
-                    db.files.Add(newFile);
-                    db.SaveChanges();
-                }
-                catch (Exception e)
-                {
-                    guid = Guid.NewGuid().ToString();
-                    error = e;
-                }
-            } while (error != null);
-
-
             string[] paths = filePath.Split('\\');
-
             bool result = true;
             try
             {
