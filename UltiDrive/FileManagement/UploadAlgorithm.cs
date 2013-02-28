@@ -12,7 +12,8 @@ namespace FileManagement
 
     public class UploadAlgorithm
     {
-        private SortedSet<StorageInformation> sortedStorage;
+        private static SortedSet<StorageInformation> sortedStorage;
+        public static SortedSet<StorageInformation> Services { get { return sortedStorage; } }
         public StorageInformation GetServiceStorageInformation(StorageServices service)
         {
             return sortedStorage.First(info => info.service == service);

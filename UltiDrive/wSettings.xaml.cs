@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Microsoft.Win32;
 using UltiDrive.Dropbox.Api;
+using FileManagement;
 
 namespace UltiDrive
 {
@@ -51,12 +52,10 @@ namespace UltiDrive
                 // Check to see if reg key exists
                 RegKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software").OpenSubKey("Microsoft").OpenSubKey("Windows").OpenSubKey("CurrentVersion").OpenSubKey("Run", true);
 
-
                 if (RegKey == null)
                 {
                     return; // exit the procedure - It should be there!
                 }
-
 
                 // Do save or get
                 //==============================================================
@@ -120,13 +119,13 @@ namespace UltiDrive
                 "Are you sure you want to disconnect from all services?") == true)
             {
                 //UbuntuOne.Api.Logout();
-
-                SkyDrive.Api.Logout();
-
-                GoogleDrive.GoogleDriveRefreshInfo.Instance = null;
+                foreach (StorageInformation service in UploadAlgorithm.Services)
+                {
+                    SkyDrive.Api.Logout();
+                    GoogleDrive.Api.Logout();
+                }
 
                 DropboxApi.Api.AccessToken = null;
-
                 System.IO.Directory.Delete(App.AppFolder, true);
             }
         }

@@ -75,13 +75,14 @@ namespace UltiDrive.FileManagement
                 DateTime newLastModified = System.IO.File.GetLastWriteTime(newFileName);
 
                 var request = (from f in db.files 
-                               where f.origFileName == oldFileName 
+                               where f.rootFolder + f.relativeFilePath == oldFileName 
                                select f);
 
                 file theFile = request.First();
 
                 theFile.lastModified = newLastModified;
-                theFile.origFileName = newFileName;
+                theFile.origFileName = newFileName.Split('\\').Last();
+                theFile.relativeFilePath = newFileName.Replace(theFile.rootFolder, "");
 
                 db.SaveChanges();
                 return true;
@@ -132,36 +133,23 @@ namespace UltiDrive.FileManagement
             return result;
         }
 
-        public static string UploadFile(string guid, string filePath, StorageServices service)
+        public static string UploadFile(file newFile)
         {
             indexEntities db = new indexEntities();
-            string rootFolder = FileStructure.Index.IndexRoots.Where(root => filePath.Contains(root.RootFolderName))
-                                                                .First().RootFolderName;
-            string serviceName = Enum.GetName(typeof(StorageServices), service);
-
-            file newFile = new file()
-            {
-                origFileName = filePath,
-                service = serviceName,
-                lastModified = System.IO.File.GetLastWriteTime(filePath),
-                rootFolder = rootFolder,
-                relativeFilePath = filePath.Replace(rootFolder, ""),
-            };
-
-            string[] paths = filePath.Split('\\');
-
+            
+            StorageServices service = (StorageServices)Enum.Parse(typeof(StorageServices), newFile.service);
             try
             {
                 switch (service)
                 {
                     case StorageServices.Dropbox:
-                        Dropbox.Api.FileSystemInfo file = DropboxApi.Api.UploadFile("sandbox", guid, filePath);
+                        Dropbox.Api.FileSystemInfo file = DropboxApi.Api.UploadFile("sandbox", newFile.guid, newFile.fullpath);
                         return file.Path;
                     case StorageServices.GoogleDrive:
-                        var gfile = GoogleDrive.Api.UploadFile(guid, filePath);
+                        var gfile = GoogleDrive.Api.UploadFile(newFile.guid, newFile.fullpath);
                         break;
                     case StorageServices.SkyDrive:
-                        SkyDrive.Api.UploadFile(guid, filePath);
+                        SkyDrive.Api.UploadFile(newFile.guid, newFile.fullpath);
                         break;
                     case StorageServices.UbuntuOne:
                         throw new NotImplementedException();
@@ -179,21 +167,17 @@ namespace UltiDrive.FileManagement
             }
         }
 
-        public static bool DownloadFile(string fileName, string downloadLocation)
+        public static bool DownloadFile(string guid, string downloadLocation)
         {
-            //Aaron, look at this, much easier to read/write
-            string guid = "";
-            string serviceStr = "";
             indexEntities db = new indexEntities();
             file dbFile = (from f in db.files
-                         where f.origFileName == fileName
+                         where f.guid == guid
                          select f).First();
             
-            guid = dbFile.guid;
-            serviceStr = dbFile.service;
+            string serviceStr = dbFile.service;
 
             bool result = true;
-            StorageServices service = Utilities.GetStorageService(serviceStr);
+            StorageServices service = (StorageServices)Enum.Parse(typeof(StorageServices), serviceStr);
             if (guid != "" && service != StorageServices.Empty)
             {
                 try

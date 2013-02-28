@@ -33,6 +33,7 @@ namespace FileManagement
                 subFolders = new List<DirectoryInfo>();
 
                 DirectoryInfo thisDir = new DirectoryInfo(location);
+                subFolders.Add(thisDir);
 
                 BuildDirectories(thisDir);
                 foreach (DirectoryInfo dir in subFolders)

@@ -17,12 +17,23 @@ using UltiDrive.Dropbox.Api;
 
 namespace UltiDrive
 {
+    public partial class file
+    {
+        public string fullpath { get { return this.rootFolder + this.relativeFilePath; } }
+    }
+
+    public abstract class API
+    {
+        public abstract void Login(bool asDialog);
+        public abstract void Logout();
+        public abstract file DownloadFile(string guid, string downloadLocation);
+        public abstract file UpdateFile(string fullfilepath);
+        public abstract file UploadFile(string guid, string fullfilepath);
+        public abstract bool DeleteFile();
+    }
+
     class Utilities
     {
-        public static string ParseSourceForIdentifier(string identifier, Uri source)
-        {
-            return ParseSourceForIdentifier(identifier, source.ToString());
-        }
         public static string ParseSourceForIdentifier(string identifier, string source)
         {
             //looks through the URL to find the specified identifier and returns the value of the identifier
@@ -52,35 +63,6 @@ namespace UltiDrive
         {
             string json = Newtonsoft.Json.JsonConvert.SerializeObject(DropboxApi.Api.AccessToken);
             System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\UltiDrive\\Dropbox.json", json);
-        }
-
-        public static StorageServices GetStorageService(string value)
-        {
-            StorageServices service = StorageServices.Empty;
-
-            switch (value)
-            {
-                case "Box":
-                    service = StorageServices.Box;
-                    break;
-                case "Dropbox":
-                    service = StorageServices.Dropbox;
-                    break;
-                case "SkyDrive":
-                    service = StorageServices.SkyDrive;
-                    break;
-                case "GoogleDrive":
-                    service = StorageServices.GoogleDrive;
-                    break;
-                case "UbuntuOne":
-                    service = StorageServices.UbuntuOne;
-                    break;
-                default:
-                    service = StorageServices.Empty;
-                    break;
-            }
-
-            return service;
         }
     }
 }

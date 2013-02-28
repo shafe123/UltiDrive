@@ -149,9 +149,44 @@ namespace UltiDrive
 
         void watcher_Created(object sender, FileSystemEventArgs e)
         {
+            indexEntities db = new indexEntities();
+
             FileInfo info = new FileInfo(e.FullPath);
-            string guid = Guid.NewGuid().ToString();
-            Unity.UploadFile(guid, e.FullPath, FileStructure.algo.SortingHat(info));
+            file newFile = new file()
+            {
+                lastModified = info.LastWriteTime,
+                origFileName = info.Name
+            };
+
+            foreach (RootFolder folder in FileStructure.Index.IndexRoots)
+            {
+                if (e.FullPath.Contains(folder.RootFolderName))
+                {
+                    newFile.rootFolder = folder.RootFolderName;
+                    newFile.relativeFilePath = info.FullName.Replace(folder.RootFolderName, "");
+                    newFile.service = Enum.GetName(typeof(StorageServices), FileStructure.algo.SortingHat(info));
+                    break;
+                }
+            }
+
+            Exception error;
+            do
+            {
+                error = null;
+                newFile.guid = Guid.NewGuid().ToString();
+                try
+                {
+                    newFile = db.files.Add(newFile);
+                    db.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    error = ex;
+                }
+            } while (error != null);
+
+            newFile.serviceFileId = Unity.UploadFile(newFile);
+            db.SaveChanges();
 
             System.Windows.Forms.MessageBox.Show("A file has been uploaded");
         }
@@ -481,22 +516,22 @@ namespace UltiDrive
 
         #region Skydrive
 
-        private void btnUploadFile_Click(object sender, RoutedEventArgs e)
-        {
-            string path;
-            OpenFileDialog file = new OpenFileDialog();
-            file.ShowDialog();
-            path = file.FileName;
-            if (path != "")
-            {
-                string guid = Guid.NewGuid().ToString();
-                Unity.UploadFile(guid, path, StorageServices.SkyDrive);
-            }
-            else
-            {
-                MessageBox.Show("You didn't select a file.");
-            }
-        }
+        //private void btnUploadFile_Click(object sender, RoutedEventArgs e)
+        //{
+        //    string path;
+        //    OpenFileDialog file = new OpenFileDialog();
+        //    file.ShowDialog();
+        //    path = file.FileName;
+        //    if (path != "")
+        //    {
+        //        string guid = Guid.NewGuid().ToString();
+        //        Unity.UploadFile(guid, path, StorageServices.SkyDrive);
+        //    }
+        //    else
+        //    {
+        //        MessageBox.Show("You didn't select a file.");
+        //    }
+        //}
 
         private void ConnectClient_UploadCompleted(object sender, LiveOperationCompletedEventArgs e)
         {
@@ -680,20 +715,20 @@ namespace UltiDrive
             btnDropboxDownload.IsEnabled = true;
         }
 
-        private void btnDropboxUpload_Click(object sender, RoutedEventArgs e)
-        {
-            System.Windows.Forms.OpenFileDialog dialog = new System.Windows.Forms.OpenFileDialog();
-            dialog.Title = "UltiDrive";
-            System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+        //private void btnDropboxUpload_Click(object sender, RoutedEventArgs e)
+        //{
+        //    System.Windows.Forms.OpenFileDialog dialog = new System.Windows.Forms.OpenFileDialog();
+        //    dialog.Title = "UltiDrive";
+        //    System.Windows.Forms.DialogResult result = dialog.ShowDialog();
 
-            if (result == System.Windows.Forms.DialogResult.OK)
-            {
-                string filePath = dialog.FileName;
-                Unity.UploadFile(Guid.NewGuid().ToString(), filePath, StorageServices.Dropbox);
+        //    if (result == System.Windows.Forms.DialogResult.OK)
+        //    {
+        //        string filePath = dialog.FileName;
+        //        Unity.UploadFile(Guid.NewGuid().ToString(), filePath, StorageServices.Dropbox);
 
-                btnDropboxFiles_Click(null, null);
-            }
-        }
+        //        btnDropboxFiles_Click(null, null);
+        //    }
+        //}
 
         private void gDropBoxNav1_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
@@ -710,7 +745,7 @@ namespace UltiDrive
                 btnDropboxAccount.Visibility = System.Windows.Visibility.Hidden;
                 btnDropboxFiles.Visibility = System.Windows.Visibility.Hidden;
                 btnDropboxDownload.Visibility = System.Windows.Visibility.Hidden;
-                btnDropboxUpload.Visibility = System.Windows.Visibility.Hidden;
+                //btnDropboxUpload.Visibility = System.Windows.Visibility.Hidden;
                 btnDropboxAuto.Visibility = System.Windows.Visibility.Visible;
 
                 btnDropboxLogin.IsEnabled = true;
@@ -718,7 +753,7 @@ namespace UltiDrive
                 btnDropboxAccount.IsEnabled = false;
                 btnDropboxFiles.IsEnabled = false;
                 btnDropboxDownload.IsEnabled = false;
-                btnDropboxUpload.IsEnabled = false;
+                //btnDropboxUpload.IsEnabled = false;
                 btnDropboxAuto.IsEnabled = true;
             }
 
@@ -729,7 +764,7 @@ namespace UltiDrive
                 btnDropboxAccount.Visibility = System.Windows.Visibility.Visible;
                 btnDropboxFiles.Visibility = System.Windows.Visibility.Visible;
                 btnDropboxDownload.Visibility = System.Windows.Visibility.Hidden;
-                btnDropboxUpload.Visibility = System.Windows.Visibility.Visible;
+                //btnDropboxUpload.Visibility = System.Windows.Visibility.Visible;
                 btnDropboxAuto.Visibility = System.Windows.Visibility.Hidden;
 
                 btnDropboxLogin.IsEnabled = false;
@@ -737,7 +772,7 @@ namespace UltiDrive
                 btnDropboxAccount.IsEnabled = true;
                 btnDropboxFiles.IsEnabled = true;
                 btnDropboxDownload.IsEnabled = false;
-                btnDropboxUpload.IsEnabled = true;
+                //btnDropboxUpload.IsEnabled = true;
                 btnDropboxAuto.IsEnabled = false;
             }
         }

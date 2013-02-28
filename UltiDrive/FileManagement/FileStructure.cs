@@ -106,7 +106,7 @@ namespace FileManagement
             foreach (file file in files)
             {
                 StorageServices service = (StorageServices)Enum.Parse(typeof(StorageServices), file.service);
-                file.serviceFileId = Unity.UploadFile(file.guid, file.rootFolder + file.relativeFilePath, service);
+                file.serviceFileId = Unity.UploadFile(file);
                 
                 db.files.Single(f => f.guid == file.guid).serviceFileId = file.serviceFileId;
             }

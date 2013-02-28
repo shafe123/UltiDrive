@@ -126,7 +126,7 @@
                 <Button Content="Download File" Template="{DynamicResource BtnNav2Template}" Foreground="White" Margin="228,0,229,3" HorizontalAlignment="Left" Width="97" IsEnabled="False" x:Name="btnDropboxDownload" Click="btnDropboxDownload_Click" Visibility="Hidden"/>
 
                 <Button Content="Auto Login" Template="{DynamicResource BtnNav2Template}" Foreground="White" Margin="330,0,127,3" HorizontalAlignment="Left" Width="97" x:Name="btnDropboxAuto" Click="btnDropboxAuto_Click"/>
-                <Button Content="Upload File" Template="{DynamicResource BtnNav2Template}" Foreground="White" Margin="330,0,127,3" HorizontalAlignment="Left" Width="97" x:Name="btnDropboxUpload" Click="btnDropboxUpload_Click" IsEnabled="False" Visibility="Hidden"/>
+                <!--<Button Content="Upload File" Template="{DynamicResource BtnNav2Template}" Foreground="White" Margin="330,0,127,3" HorizontalAlignment="Left" Width="97" x:Name="btnDropboxUpload" Click="btnDropboxUpload_Click" IsEnabled="False" Visibility="Hidden"/>-->
             </Grid>
             <Grid x:Name="gGoogleDriveNav1" Grid.Row="1" Margin="0,80,0,0" Visibility="Collapsed">
                 <Button x:Name="GoogleDriveLogin" Content="Login" Margin="24,0,433,3" Template="{DynamicResource BtnNav2Template}" Foreground="White" HorizontalAlignment="Left" Width="97" Click="btnGoogleDriveLogin_Click"/>
@@ -142,7 +142,7 @@
             </Grid>-->
             <Grid x:Name="gSkyDriveNav1" Grid.Row="1" Margin="0,80,0,0" Visibility="Collapsed">
                 <Button x:Name="btnSkyDriveLogIn" Content="Login"  Margin="24,0,433,3" Template="{DynamicResource BtnNav2Template}" Foreground="White" HorizontalAlignment="Left" Width="97" Click="SkyDriveLogIn_Click"/>
-                <Button x:Name="btnUploadFile" Content="Upload File" Margin="126,0,331,3" Template="{DynamicResource BtnNav2Template}" Foreground="White" HorizontalAlignment="Left" Width="97" Click="btnUploadFile_Click" />
+                <!--<Button x:Name="btnUploadFile" Content="Upload File" Margin="126,0,331,3" Template="{DynamicResource BtnNav2Template}" Foreground="White" HorizontalAlignment="Left" Width="97" Click="btnUploadFile_Click" />-->
                 <Button Content="btnSkyDrive3" Margin="228,0,229,3" Template="{DynamicResource BtnNav2Template}" Foreground="White" HorizontalAlignment="Left" Width="97" />
                 <Button Content="btnSkyDrive4" Margin="330,0,127,3" Template="{DynamicResource BtnNav2Template}" Foreground="White" HorizontalAlignment="Left" Width="97" />
             </Grid>
