@@ -13,7 +13,8 @@ namespace FileManagement
 {
     public class FileStructure
     {
-        public static UploadAlgorithm algo;
+        public UploadAlgorithm algo;
+        public UltiDriveSystemWatcher watcher;
         public List<String> UnManagedFiles;
         public List<RootFolder> IndexRoots;
         private FileStructure() { }
@@ -45,13 +46,17 @@ namespace FileManagement
             _Index.IndexRoots = new List<RootFolder>();
             _Index.UnManagedFiles = new List<string>();
 
-            algo = new UploadAlgorithm(info);
+            _Index.algo = new UploadAlgorithm(info);
             _Index.InstantiateIndex(rootFolders.Count, rootFolders);
         }
 
         private void InstantiateIndex(int count, List<String> roots)
         {
             RemoveDuplicates(ref roots);
+            StringWriter stringWriter = new StringWriter(new System.Text.StringBuilder());
+            System.Xml.Serialization.XmlSerializer writer = new System.Xml.Serialization.XmlSerializer(typeof(List<string>));
+            writer.Serialize(stringWriter, roots);
+            System.IO.File.WriteAllText(App.AppFolder + "\\Watcher.dat", stringWriter.ToString());
 
             Task[] taskArray = new Task[count];
             for (int i = 0; i < count; i++)
@@ -65,7 +70,8 @@ namespace FileManagement
             taskArray = new Task[8];
             indexEntities db = new indexEntities();
             List<file> files = db.files.ToList();
-            UploadFiles(0, files);
+            _Index.watcher = new UltiDriveSystemWatcher(roots);
+            UpdateFiles(0, files);
 
             //int sections = files.Count / 8;
 
@@ -94,7 +100,7 @@ namespace FileManagement
             foreach (string removal in toRemove)
                 rootFolders.Remove(removal);
         }
-        private void UploadFiles(int ival, List<file> files)
+        private void UpdateFiles(int ival, List<file> files)
         {
             indexEntities db = new indexEntities();
 
@@ -105,10 +111,25 @@ namespace FileManagement
 
             foreach (file file in files)
             {
-                StorageServices service = (StorageServices)Enum.Parse(typeof(StorageServices), file.service);
-                file.serviceFileId = Unity.UploadFile(file);
+                if (file.serviceFileId != null)
+                {
+                    FileInfo fileInfo = new FileInfo(file.fullpath);
+
+                    if (fileInfo.LastWriteTime > file.lastModified)
+                    {
+                        Unity.UpdateFile(file.fullpath);
+                    }
+                    db.files.Single(f => f.guid == file.guid).lastModified = fileInfo.LastWriteTime;
+                }
+                else
+                {
+                    file.serviceFileId = Unity.UploadFile(file);
+                }
                 
                 db.files.Single(f => f.guid == file.guid).serviceFileId = file.serviceFileId;
+
+                if (db.ChangeTracker.Entries().Count() > 500)
+                    db.SaveChanges();
             }
             db.SaveChanges();
         }

@@ -94,28 +94,20 @@ namespace UltiDrive.FileManagement
             }
         }
 
-        public static bool UpdateFile(string filePath)
+        public static bool UpdateFile(file uploadFile)
         {
-            string[] paths = filePath.Split('\\');
-            string filename = paths.Last();
-
-            indexEntities db = new indexEntities();
-            file uploadFile = (from f in db.files
-                               where (f.rootFolder + f.relativeFilePath) == filePath
-                               select f).First();
-
             bool result = true;
             try
             {
                 switch (uploadFile.service)
                 {
                     case "Dropbox":
-                        var file = DropboxApi.Api.UploadFile("sandbox", uploadFile.guid, filePath);
+                        var file = DropboxApi.Api.UploadFile("sandbox", uploadFile.guid, uploadFile.fullpath);
                         break;
                     case "GoogleDrive":
                         throw new NotImplementedException();
                     case "SkyDrive":
-                        SkyDrive.Api.UploadFile(uploadFile.guid, filePath);
+                        SkyDrive.Api.UploadFile(uploadFile.guid, uploadFile.fullpath);
                         break;
                     case "UbuntuOne":
                         throw new NotImplementedException();
@@ -131,6 +123,22 @@ namespace UltiDrive.FileManagement
             }
 
             return result;
+        }
+
+        public static bool UpdateFile(string filePath)
+        {
+            if (!System.IO.File.Exists(filePath))
+                return false;
+
+            string[] paths = filePath.Split('\\');
+            string filename = paths.Last();
+
+            indexEntities db = new indexEntities();
+            file uploadFile = (from f in db.files
+                               where (f.rootFolder + f.relativeFilePath) == filePath
+                               select f).First();
+
+            return UpdateFile(uploadFile);
         }
 
         public static string UploadFile(file newFile)

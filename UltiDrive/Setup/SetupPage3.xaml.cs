@@ -35,18 +35,20 @@ namespace UltiDrive.Setup
             directories = Directories.ToList<string>();
             List<StorageInformation> info = Services.ToList<StorageInformation>();
 
-            Task init = Task.Factory.StartNew(()=> new FileStructure(directories, info));
+            App.initialize = Task.Factory.StartNew(() => App._structure = new FileStructure(directories, info));
 
             foreach (StorageInformation service in Services)
             {
                 App.TotalAvailable += service.storageTotal;
                 App.TotalUsed += service.storageTotal - service.storageLeft;
             }
+
+            App.initialize.Wait();
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            new FancyMainWindow(directories).Show();
+            new FancyMainWindow().Show();
             this.parent.Close();
         }
     }

@@ -22,14 +22,14 @@ namespace UltiDrive
         public string fullpath { get { return this.rootFolder + this.relativeFilePath; } }
     }
 
-    public abstract class API
+    public interface API
     {
-        public abstract void Login(bool asDialog);
-        public abstract void Logout();
-        public abstract file DownloadFile(string guid, string downloadLocation);
-        public abstract file UpdateFile(string fullfilepath);
-        public abstract file UploadFile(string guid, string fullfilepath);
-        public abstract bool DeleteFile();
+        void Login(bool asDialog);
+        void Logout();
+        file DownloadFile(string guid, string downloadLocation);
+        file UpdateFile(string fullfilepath);
+        file UploadFile(string guid, string fullfilepath);
+        bool DeleteFile();
     }
 
     class Utilities

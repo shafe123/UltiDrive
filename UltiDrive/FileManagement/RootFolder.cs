@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Validation;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -15,10 +16,6 @@ namespace FileManagement
         public List<FileInfo> includedFiles;
         public List<DirectoryInfo> subFolders;
 
-        public bool HasFiles()
-        {
-            return includedFiles.Count > 0;
-        }
         public bool HasSubFolders()
         {
             return subFolders.Count > 0;
@@ -29,7 +26,6 @@ namespace FileManagement
             if (location != "")
             {
                 RootFolderName = location;
-                includedFiles = new List<FileInfo>();
                 subFolders = new List<DirectoryInfo>();
 
                 DirectoryInfo thisDir = new DirectoryInfo(location);
@@ -68,38 +64,47 @@ namespace FileManagement
                 //Console.WriteLine(file.FullName);
                 try
                 {
-                    string service = Enum.GetName(typeof(StorageServices), FileStructure.algo.SortingHat(file));
-
-                    UltiDrive.file newFile = new UltiDrive.file()
+                    if (db.files.Where(f => f.rootFolder + f.relativeFilePath == file.FullName).Count() == 0)
                     {
-                        lastModified = file.LastWriteTime,
-                        origFileName = file.Name,
-                        relativeFilePath = file.FullName.Replace(this.RootFolderName, ""),
-                        rootFolder = this.RootFolderName,
-                        service = service,
-                    };
+                        string service = Enum.GetName(typeof(StorageServices), FileStructure.Index.algo.SortingHat(file));
 
-
-                    Exception error = null;
-                    do
-                    {
-                        error = null;
-                        newFile.guid = Guid.NewGuid().ToString();
-                        try
+                        UltiDrive.file newFile = new UltiDrive.file()
                         {
-                            db.files.Add(newFile);
-                            db.SaveChanges();
-                        }
-                        catch (Exception e)
-                        {
-                            error = e;
-                        }
-                    } while (error != null);
+                            lastModified = file.LastWriteTime,
+                            origFileName = file.Name,
+                            relativeFilePath = file.FullName.Replace(this.RootFolderName, ""),
+                            rootFolder = this.RootFolderName,
+                            service = service,
+                        };
 
-                    db.files.Add(newFile);
-                    db.SaveChanges();
+
+                        Exception error = null;
+                        int count = 0;
+                        do
+                        {
+                            error = null;
+                            newFile.guid = Guid.NewGuid().ToString();
+                            try
+                            {
+                                db.files.Add(newFile);
+                                db.SaveChanges();
+                            }
+                            catch (Exception e)
+                            {
+                                IEnumerable<DbEntityValidationResult> results = db.GetValidationErrors();
+
+                                error = e;
+                                count++;
+                                if (count > 2)
+                                {
+                                    FileStructure.Index.UnManagedFiles.Add(file.FullName);
+                                    break;
+                                }
+                            }
+                        } while (error != null);
+                    }
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
                     FileStructure.Index.UnManagedFiles.Add(file.FullName);
                 }

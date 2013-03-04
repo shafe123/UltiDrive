@@ -2,7 +2,7 @@
        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:Setup="clr-namespace:UltiDrive.Setup" mc:Ignorable="d" x:Class="UltiDrive.FancyMainWindow"
-        Title="UltiDrive" Height="493" Width="540" MinHeight="445" MinWidth="540" x:Name="window" WindowStyle="None" WindowStartupLocation="CenterScreen" AllowsTransparency="True" MouseDown="window_MouseDown" ResizeMode="CanResizeWithGrip" Closing="window_Closing">
+        Title="UltiDrive" Height="493" Width="540" MinHeight="445" MinWidth="540" x:Name="window" WindowStyle="None" WindowStartupLocation="CenterScreen" AllowsTransparency="True" MouseDown="window_MouseDown" ResizeMode="CanResizeWithGrip">
 
     <Window.Resources>
         <Setup:ByteConverter x:Key="ByteConverter"/>
@@ -76,102 +76,22 @@
                 </Grid>
             </Border>
             <Border x:Name="bNavigation" Grid.Row="1" Background="#11FFFFFF" BorderThickness="1" CornerRadius="3" BorderBrush="#26B1EDFF" Margin="10,0">
-                <Grid x:Name="gNavigation" >
-
-                    <Button x:Name="btnDropbox" Content="Dropbox" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Height="54" Margin="10,10,0,10" Style="{DynamicResource UDBTNStyle1}" Foreground="#FFCFF0FF" FontSize="18.667" MouseEnter="btnDropbox_MouseEnter" MouseLeave="btnDropbox_MouseLeave" Click="btnDropbox_Click"   />
-                    <Button x:Name="btnGoogleDrive" Content="Google Drive" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Height="54" Margin="135,10,0,10" Style="{DynamicResource UDBTNStyle1}" Foreground="#FFCFF0FF" FontSize="18.667" MouseEnter="btnGoogleDrive_MouseEnter" MouseLeave="btnGoogleDrive_MouseLeave" Click="btnGoogleDrive_Click"  />
-                    <!--<Button x:Name="btnUbuntu" Content="Ubuntu" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Height="54" Margin="260,10,0,10" Style="{DynamicResource UDBTNStyle1}" Foreground="#FFCFF0FF" FontSize="18.667" MouseEnter="btnUbuntu_MouseEnter" MouseLeave="btnUbuntu_MouseLeave" Click="btnUbuntu_Click"  />-->
-                    <Button x:Name="btnSkyDrive" Content="Sky Drive" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Height="54" Margin="260,10,0,10" Style="{DynamicResource UDBTNStyle1}" Foreground="#FFCFF0FF" FontSize="18.667" MouseEnter="btnSkyDrive_MouseEnter" MouseLeave="btnSkyDrive_MouseLeave" Click="btnSkyDrive_Click"  />
-                    <Button x:Name="btnBOX" Content="Box" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Height="54" Margin="385,9,0,0" Style="{DynamicResource UDBTNStyle1}" Foreground="#FFCFF0FF" FontSize="18.667" Click="btnBOX_Click"   />
-
-                    <Border BorderThickness="1" HorizontalAlignment="Left" Height="11" Margin="10,69,0,0" VerticalAlignment="Top" Width="120" x:Name="bDropBoxLight" Background="White" Visibility="Collapsed">
-                        <Border.Effect>
-                            <BlurEffect Radius="10"/>
-                        </Border.Effect>
-                    </Border>
-                    <Border BorderThickness="1" HorizontalAlignment="Left" Height="11" Margin="135,68.5,0,0" VerticalAlignment="Top" Width="120" x:Name="bGoogleDriveLight" Background="White" Visibility="Collapsed">
-                        <Border.Effect>
-                            <BlurEffect Radius="10"/>
-                        </Border.Effect>
-                    </Border>
-                    <Border BorderThickness="1" HorizontalAlignment="Left" Height="11" Margin="260,68.5,0,0" VerticalAlignment="Top" Width="120" x:Name="bUbuntuLight" Background="White" Visibility="Collapsed">
-                        <Border.Effect>
-                            <BlurEffect Radius="10"/>
-                        </Border.Effect>
-                    </Border>
-                    <Border BorderThickness="1" HorizontalAlignment="Left" Height="11" Margin="385,68.5,0,0" VerticalAlignment="Top" Width="120" x:Name="bSkyDriveLight" Background="White" Visibility="Collapsed">
-                        <Border.Effect>
-                            <BlurEffect Radius="10"/>
-                        </Border.Effect>
-                    </Border>
-                    <Border x:Name="bDropBoxNav1" BorderThickness="1" HorizontalAlignment="Left" Height="36.25" VerticalAlignment="Top" Width="495" Margin="10,68.5,0,-31.75" CornerRadius="5" BorderBrush="#72FFFFFF" Background="#BF229BC9" Visibility="Collapsed">
-                        <Grid>
-                            <Button x:Name="btnDropBox1" Content="Button" HorizontalAlignment="Left" VerticalAlignment="Center" Width="75" Margin="2.668,6.145,0,6.145" />
-                        </Grid>
-                    </Border>
-                    <Button Visibility="Collapsed" x:Name="btnMinimizenav2" Content="Button" HorizontalAlignment="Right" Height="17" Margin="0,0,3.25,3.438" Style="{DynamicResource btnMinimizeNav2}" VerticalAlignment="Bottom" Width="15.25" Click="btnMinimizenav2_Click"/>
-                </Grid>
+                <Button Content="Show Unmanaged Files" Name="ShowUnmanagedFiles" Click="ShowUnmanagedFiles_Click"/>
             </Border>
 
 
             <!-- ================================= Extra Buttons =================================  -->
-
-            <Grid x:Name="gDropBoxNav1" Grid.Row="1" Margin="0,80,0,0" Visibility="Collapsed" IsVisibleChanged="gDropBoxNav1_IsVisibleChanged">
-                <Button Content="Login" Template="{DynamicResource BtnNav2Template}" Foreground="White"  Margin="24,0,0,3" HorizontalAlignment="Left" Width="97" x:Name="btnDropboxLogin" Click="btnDropboxLogin_Click"/>
-                <Button Content="Logout" Template="{DynamicResource BtnNav2Template}" Foreground="White"  Margin="24,0,0,3" HorizontalAlignment="Left" Width="97" x:Name="btnDropboxLogout" Click="btnDropboxLogout_Click" Visibility="Hidden"/>
-
-                <Button Content="Account Info" Template="{DynamicResource BtnNav2Template}" Foreground="White" Margin="126,0,331,3" HorizontalAlignment="Left" Width="97" IsEnabled="False" x:Name="btnDropboxAccount" Click="btnDropboxAccount_Click"/>
-
-                <Button Content="List Files" Template="{DynamicResource BtnNav2Template}" Foreground="White" Margin="228,0,229,3" HorizontalAlignment="Left" Width="97" IsEnabled="False" x:Name="btnDropboxFiles" Click="btnDropboxFiles_Click"/>
-                <Button Content="Download File" Template="{DynamicResource BtnNav2Template}" Foreground="White" Margin="228,0,229,3" HorizontalAlignment="Left" Width="97" IsEnabled="False" x:Name="btnDropboxDownload" Click="btnDropboxDownload_Click" Visibility="Hidden"/>
-
-                <Button Content="Auto Login" Template="{DynamicResource BtnNav2Template}" Foreground="White" Margin="330,0,127,3" HorizontalAlignment="Left" Width="97" x:Name="btnDropboxAuto" Click="btnDropboxAuto_Click"/>
-                <!--<Button Content="Upload File" Template="{DynamicResource BtnNav2Template}" Foreground="White" Margin="330,0,127,3" HorizontalAlignment="Left" Width="97" x:Name="btnDropboxUpload" Click="btnDropboxUpload_Click" IsEnabled="False" Visibility="Hidden"/>-->
-            </Grid>
-            <Grid x:Name="gGoogleDriveNav1" Grid.Row="1" Margin="0,80,0,0" Visibility="Collapsed">
-                <Button x:Name="GoogleDriveLogin" Content="Login" Margin="24,0,433,3" Template="{DynamicResource BtnNav2Template}" Foreground="White" HorizontalAlignment="Left" Width="97" Click="btnGoogleDriveLogin_Click"/>
-                <Button x:Name="GoogleDriveListFiles" Content="List Files" Click="ListFiles" Margin="126,0,331,3" Template="{DynamicResource BtnNav2Template}" Foreground="White" HorizontalAlignment="Left" Width="97"/>
-                <Button Content="btnGoogleDrive3" Margin="228,0,229,3" Template="{DynamicResource BtnNav2Template}" Foreground="White" HorizontalAlignment="Left" Width="97" Click="UploadFile" />
-                <Button Content="btnGoogleDrive4" Margin="330,0,127,3" Template="{DynamicResource BtnNav2Template}" Foreground="White" HorizontalAlignment="Left" Width="97" />
-            </Grid>
             <!--<Grid x:Name="gUbuntuNav1" Grid.Row="1" Margin="0,80,0,0" Visibility="Collapsed">
                 <Button x:Name="btnUbuntu_signin" Click="btnUbuntu_signin_Click" Content="Sign-in" Margin="24,0,433,3" Template="{DynamicResource BtnNav2Template}" Foreground="White" HorizontalAlignment="Left" Width="97" />
                 <Button x:Name="btnUbuntu_info" Content="Get Info" Margin="126,0,331,3" Template="{DynamicResource BtnNav2Template}" Foreground="White" HorizontalAlignment="Left" Width="97"/>
                 <Button x:Name="btnUbuntu_3" Content="Upload Test" Click="Upload_Test_Click" Margin="228,0,229,3" Template="{DynamicResource BtnNav2Template}" Foreground="White" HorizontalAlignment="Left" Width="97"/>
                 <Button x:Name="btnUbuntu_4" Content="Show Files" Click="ShowFiles" Margin="330,0,127,3" Template="{DynamicResource BtnNav2Template}" Foreground="White" HorizontalAlignment="Left" Width="97"/>
             </Grid>-->
-            <Grid x:Name="gSkyDriveNav1" Grid.Row="1" Margin="0,80,0,0" Visibility="Collapsed">
-                <Button x:Name="btnSkyDriveLogIn" Content="Login"  Margin="24,0,433,3" Template="{DynamicResource BtnNav2Template}" Foreground="White" HorizontalAlignment="Left" Width="97" Click="SkyDriveLogIn_Click"/>
-                <!--<Button x:Name="btnUploadFile" Content="Upload File" Margin="126,0,331,3" Template="{DynamicResource BtnNav2Template}" Foreground="White" HorizontalAlignment="Left" Width="97" Click="btnUploadFile_Click" />-->
-                <Button Content="btnSkyDrive3" Margin="228,0,229,3" Template="{DynamicResource BtnNav2Template}" Foreground="White" HorizontalAlignment="Left" Width="97" />
-                <Button Content="btnSkyDrive4" Margin="330,0,127,3" Template="{DynamicResource BtnNav2Template}" Foreground="White" HorizontalAlignment="Left" Width="97" />
-            </Grid>
-
-            <Grid x:Name="gBoxNET" Grid.Row="1" Margin="0,80,0,0" Visibility="Collapsed">
-                <Button x:Name="btnBoxLogin" Content="Login"  Margin="24,0,433,3" Template="{DynamicResource BtnNav2Template}" Foreground="White" HorizontalAlignment="Left" Width="97" Click="btnBoxLogin_Click"/>
-                <!--<Button x:Name="btnBoxAccount" Visibility="Visible" IsEnabled="False" Content="My Account"  Margin="126,0,331,3" Template="{DynamicResource BtnNav2Template}" Foreground="White" HorizontalAlignment="Left" Width="97" Click="btnBoxAccount_Click" />-->
-                <Button x:Name="btnBox3" Visibility="Collapsed" Content="btnBox3" Margin="228,0,229,3" Template="{DynamicResource BtnNav2Template}" Foreground="White" HorizontalAlignment="Left" Width="97" />
-                <Button x:Name="btnBox4" Visibility="Collapsed" Content="btnBox4" Margin="330,0,127,3" Template="{DynamicResource BtnNav2Template}" Foreground="White" HorizontalAlignment="Left" Width="97" />
-            </Grid>
 
             <!-- ================================= Extra Buttons =================================  -->
 
             <Border x:Name="bContent" Grid.Row="2" Background="#11FFFFFF" BorderThickness="1" CornerRadius="3" BorderBrush="#26B1EDFF" Margin="10">
-                <Grid>
-                    <StackPanel Grid.Row="2" x:Name="UbuntuStackPanel" Visibility="Collapsed">
-                        <TreeView x:Name="UbuntuFileView" Visibility="Hidden">
-                            <TreeView.ItemTemplate>
-                                <HierarchicalDataTemplate ItemsSource="{Binding Item}">
-                                    <TextBlock Text="{Binding Item.path}" />
-                                </HierarchicalDataTemplate>
-                            </TreeView.ItemTemplate>
-                        </TreeView>
-                    </StackPanel>
-                </Grid>
-            </Border>
-
-            <Border x:Name="bFileTree" Grid.Row="2" Background="#11FFFFFF" BorderThickness="1" CornerRadius="3" BorderBrush="#26B1EDFF" Margin="10" Visibility="Collapsed">
-                <TreeView Grid.Row="2" Height="248" HorizontalAlignment="Left" Margin="7" x:Name="treeFileList" VerticalAlignment="Top" Width="497" SelectedItemChanged="treeFileList_SelectedItemChanged" />
+                <ListBox Name="UnmanagedFiles" />
             </Border>
         </Grid>
     </Border>

@@ -19,6 +19,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using UltiDrive.Dropbox.Api;
 using System.Net.NetworkInformation;
 using FileManagement;
+using UltiDrive.FileManagement;
 
 namespace UltiDrive
 {
@@ -29,6 +30,9 @@ namespace UltiDrive
     {
         private static double _TotalAvailable;
         private static double _TotalUsed;
+        public static Task initialize;
+        public static UltiDriveSystemWatcher _watcher;
+        public static FileStructure _structure;
 
         public static double TotalAvailable
         {
@@ -93,11 +97,31 @@ namespace UltiDrive
                 this.StartupUri = new Uri("Setup/InitialSetup.xaml", UriKind.Relative);
             }
             else
+            {
                 this.StartupUri = new Uri("FancyMainWindow.xaml", UriKind.Relative);
 
-            NetworkChange.NetworkAvailabilityChanged += NetworkChange_NetworkAvailabilityChanged;
+                if (System.IO.File.Exists(AppFolder + "\\Watcher.dat"))
+                {
+                    List<string> directories = new List<string>();
 
+                    string xml = System.IO.File.ReadAllText(AppFolder + "\\Watcher.dat");
+                    StringReader reader = new StringReader(xml);
+                    System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<string>));
+                    directories = (List<string>)serializer.Deserialize(reader);
+
+                    InitializeServices(ref services);
+                    _structure = new FileStructure(directories, services); 
+                }
+            }
+
+            NetworkChange.NetworkAvailabilityChanged += NetworkChange_NetworkAvailabilityChanged;
+        }
+
+        private void InitializeServices(ref List<StorageInformation> services)
+        {
             FileStream file;
+
+            #region UbuntuOne
             //UbuntuOne Settings
             //FileStream file = UbuntuOne.Utilities.GetJSONFile();
             //if (file.Length > 0)
@@ -115,6 +139,7 @@ namespace UltiDrive
             //    services.Add(new StorageInformation(StorageServices.UbuntuOne, qt.used, qt.total));
             //}
             //file.Close();
+            #endregion
 
             #region SkyDrive
             file = System.IO.File.Open(AppFolder + "\\SkyDrive.json", FileMode.OpenOrCreate, FileAccess.ReadWrite);
@@ -162,7 +187,7 @@ namespace UltiDrive
             file.Close();
             #endregion
 
-            //Google Drive
+            #region GoogleDrive
             file = System.IO.File.Open(AppFolder + "\\GoogleDrive.json", FileMode.OpenOrCreate, FileAccess.ReadWrite);
             if (file.Length > 0)
             {
@@ -180,8 +205,9 @@ namespace UltiDrive
                 services.Add(new StorageInformation(StorageServices.GoogleDrive, qt.quotaBytesUsed, qt.quotaBytesTotal));
             }
             file.Close();
+            #endregion
 
-            //Dropbox
+            #region Dropbox
             file = System.IO.File.Open(AppFolder + "\\Dropbox.json", FileMode.OpenOrCreate, FileAccess.ReadWrite);
             if (file.Length > 0)
             {
@@ -197,8 +223,9 @@ namespace UltiDrive
                 services.Add(new StorageInformation(StorageServices.Dropbox, act.Quota.Normal + act.Quota.Normal, act.Quota.Total));
             }
             file.Close();
+            #endregion
 
-            //Box
+            #region Box
             file = System.IO.File.Open(Box.Utilities.JSONFile, FileMode.OpenOrCreate, FileAccess.ReadWrite);
             if (file.Length > 0)
             {
@@ -206,7 +233,7 @@ namespace UltiDrive
                 file.Read(bytes, 0, (int)file.Length);
                 string json = Encoding.ASCII.GetString(bytes, 0, bytes.Length);
                 file.Close();
-                
+
                 Box.BoxProperties.refreshInfo = Newtonsoft.Json.JsonConvert.DeserializeObject<Box.BoxProperties.RefreshInfo>(json);
 
                 Box.Quota qt = Box.Api.GetQuota();
@@ -215,8 +242,8 @@ namespace UltiDrive
 
                 services.Add(new StorageInformation(StorageServices.Box, qt.space_used, qt.space_amount));
             }
-
-            FileStructure.algo = new UploadAlgorithm(services);
+            file.Close();
+            #endregion
         }
 
         void App_Exit(object sender, ExitEventArgs e)
