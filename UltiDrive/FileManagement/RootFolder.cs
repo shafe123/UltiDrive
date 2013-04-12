@@ -64,7 +64,7 @@ namespace FileManagement
                 //Console.WriteLine(file.FullName);
                 try
                 {
-                    if (db.files.Where(f => f.rootFolder + f.relativeFilePath == file.FullName).Count() == 0)
+                    if (db.files.Count(f => f.rootFolder + f.relativeFilePath == file.FullName) == 0)
                     {
                         string service = Enum.GetName(typeof(StorageServices), FileStructure.Index.algo.SortingHat(file));
 
@@ -97,7 +97,8 @@ namespace FileManagement
                                 count++;
                                 if (count > 2)
                                 {
-                                    FileStructure.Index.UnManagedFiles.Add(file.FullName);
+                                    db.unmanagedFiles.Add(new UltiDrive.unmanagedFile() { filePath = file.FullName, rootFolder = this.RootFolderName });
+                                    db.SaveChanges();
                                     break;
                                 }
                             }
@@ -106,7 +107,8 @@ namespace FileManagement
                 }
                 catch (Exception e)
                 {
-                    FileStructure.Index.UnManagedFiles.Add(file.FullName);
+                    db.unmanagedFiles.Add(new UltiDrive.unmanagedFile() { filePath = file.FullName, rootFolder = this.RootFolderName });
+                    db.SaveChanges();
                 }
             }
         }

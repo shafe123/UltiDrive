@@ -202,6 +202,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>UltiDriveEntities.edmx</DependentUpon>
     </Compile>
+    <Compile Include="unmanagedFile.cs">
+      <DependentUpon>UltiDriveEntities.tt</DependentUpon>
+    </Compile>
     <Compile Include="Utilities.cs" />
     <Compile Include="wSettings.xaml.cs">
       <DependentUpon>wSettings.xaml</DependentUpon>
@@ -337,6 +340,23 @@
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="IWshRuntimeLibrary">
+      <Guid>{F935DC20-1CF0-11D0-ADB9-00C04FD58A0B}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ShellLink\ShellLinkTester.csproj">
+      <Project>{1202be1b-9d2f-4b75-b02c-1790fecc2839}</Project>
+      <Name>ShellLinkTester</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

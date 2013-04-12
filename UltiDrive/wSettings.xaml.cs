@@ -13,6 +13,8 @@ using System.Windows.Shapes;
 using Microsoft.Win32;
 using UltiDrive.Dropbox.Api;
 using FileManagement;
+using System.IO;
+using System.Windows.Forms;
 
 namespace UltiDrive
 {
@@ -24,7 +26,8 @@ namespace UltiDrive
         public wSettings()
         {
             InitializeComponent();
-            SaveGetSettings(false, "SOWS");
+
+            lstRootFolders.ItemsSource = App.FolderStructure.IndexRoots.Select(r => r.RootFolderName);
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
@@ -39,78 +42,7 @@ namespace UltiDrive
 
         private void btnSaveChanges_Click(object sender, RoutedEventArgs e)
         {
-            SaveGetSettings(true, "SOWS");
             this.Close();
-        }
-
-        private void SaveGetSettings(bool blnSave, string strKeyName)
-        {
-            RegistryKey RegKey;
-            string strKeyVal = "";
-            try
-            {
-                // Check to see if reg key exists
-                RegKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software").OpenSubKey("Microsoft").OpenSubKey("Windows").OpenSubKey("CurrentVersion").OpenSubKey("Run", true);
-
-                if (RegKey == null)
-                {
-                    return; // exit the procedure - It should be there!
-                }
-
-                // Do save or get
-                //==============================================================
-                switch (blnSave)
-                {
-                    case (true):
-                        {
-                            switch (strKeyName)
-                            {
-                                case ("SOWS"):
-                                    {
-                                        string AppExec = System.Reflection.Assembly.GetExecutingAssembly().Location;
-                                        if (chkStartOnWSU.IsChecked == true)
-                                        {
-                                            RegKey.SetValue(strKeyName, AppExec);
-                                        }
-                                        else
-                                        {
-                                            RegKey.DeleteValue(strKeyName, false);
-                                        }
-                                        break;
-                                    }
-                            }
-                            break;
-
-                        }
-
-                    case (false):
-                        {
-                            switch (strKeyName)
-                            {
-                                case ("SOWS"):
-                                    {
-                                        strKeyVal = Convert.ToString(RegKey.GetValue(strKeyName));
-                                        if (strKeyVal == "")
-                                        {
-                                            chkStartOnWSU.IsChecked = false;
-                                        }
-                                        else
-                                        {
-                                            chkStartOnWSU.IsChecked = true;
-                                        }
-                                        break;
-                                    }
-                            }
-                            break;
-                        }
-                }
-                //    //==============================================================
-            }
-            catch (System.Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-
         }
 
         private void btnResetAll_Click(object sender, RoutedEventArgs e)
@@ -119,15 +51,51 @@ namespace UltiDrive
                 "Are you sure you want to disconnect from all services?") == true)
             {
                 //UbuntuOne.Api.Logout();
-                foreach (StorageInformation service in UploadAlgorithm.Services)
-                {
-                    SkyDrive.Api.Logout();
-                    GoogleDrive.Api.Logout();
-                }
+                SkyDrive.Api.Logout();
+                GoogleDrive.Api.Logout();
 
                 DropboxApi.Api.AccessToken = null;
-                System.IO.Directory.Delete(App.AppFolder, true);
+                Directory.Delete(App.AppFolder, true);
             }
+        }
+
+        private void chkStartOnWSU_Checked(object sender, RoutedEventArgs e)
+        {
+            string location = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            vbAccelerator.Components.Shell.ShellLink link = new vbAccelerator.Components.Shell.ShellLink();
+            link.Target = location;
+            link.DisplayMode = vbAccelerator.Components.Shell.ShellLink.LinkDisplayMode.edmNormal;
+            link.Save(Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\UltiDrive.lnk");
+        }
+
+        private void chkStartOnWSU_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (System.IO.File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\UltiDrive.lnk"))
+                System.IO.File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\UltiDrive.lnk");
+        }
+
+        private void RemRoot_Click(object sender, RoutedEventArgs e)
+        {
+            if (lstRootFolders.SelectedItems.Count > 0)
+            {
+                foreach (string dir in lstRootFolders.SelectedItems)
+                    App.FolderStructure.RemoveRootFolder(dir);
+            }
+
+            lstRootFolders.ItemsSource = App.FolderStructure.IndexRoots.Select(r => r.RootFolderName);
+        }
+
+        private void AddRoot_Click(object sender, RoutedEventArgs e)
+        {
+            FolderBrowserDialog fb = new FolderBrowserDialog();
+            fb.RootFolder = Environment.SpecialFolder.MyComputer;
+
+            if (fb.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                App.FolderStructure.AddRootFolder(fb.SelectedPath);
+            }
+
+            lstRootFolders.ItemsSource = App.FolderStructure.IndexRoots.Select(r => r.RootFolderName);
         }
     }
 }

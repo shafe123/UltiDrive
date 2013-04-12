@@ -7,6 +7,7 @@
     <Schema Namespace="indexModel.Store" Alias="Self" Provider="System.Data.SqlServerCe.4.0" ProviderManifestToken="4.0" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
         <EntityContainer Name="indexModelStoreContainer">
           <EntitySet Name="files" EntityType="indexModel.Store.files" store:Type="Tables" />
+          <EntitySet Name="unmanagedFiles" EntityType="indexModel.Store.unmanagedFiles" store:Type="Tables" />
         </EntityContainer>
         <EntityType Name="files">
           <Key>
@@ -20,12 +21,20 @@
           <Property Name="rootFolder" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="relativeFilePath" Type="nvarchar" Nullable="false" MaxLength="100" />
         </EntityType>
+        <EntityType Name="unmanagedFiles">
+          <Key>
+            <PropertyRef Name="filePath" />
+          </Key>
+          <Property Name="filePath" Type="nvarchar" Nullable="false" />
+          <Property Name="rootFolder" Type="nvarchar" Nullable="false" MaxLength="256" />
+        </EntityType>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="indexModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
         <EntityContainer Name="indexEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="files" EntityType="indexModel.file" />
+          <EntitySet Name="unmanagedFiles" EntityType="indexModel.unmanagedFile" />
         </EntityContainer>
         <EntityType Name="file">
           <Key>
@@ -38,6 +47,13 @@
           <Property Type="String" Name="serviceFileId" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="rootFolder" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="relativeFilePath" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="unmanagedFile">
+          <Key>
+            <PropertyRef Name="filePath" />
+          </Key>
+          <Property Type="String" Name="filePath" Nullable="false" MaxLength="4000" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="rootFolder" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -55,6 +71,14 @@
                 <ScalarProperty Name="origFileName" ColumnName="origFileName" />
                 <ScalarProperty Name="lastModified" ColumnName="lastModified" />
                 <ScalarProperty Name="service" ColumnName="service" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="unmanagedFiles">
+            <EntityTypeMapping TypeName="indexModel.unmanagedFile">
+              <MappingFragment StoreEntitySet="unmanagedFiles">
+                <ScalarProperty Name="rootFolder" ColumnName="rootFolder" />
+                <ScalarProperty Name="filePath" ColumnName="filePath" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

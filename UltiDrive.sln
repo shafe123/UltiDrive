@@ -2,6 +2,11 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UltiDrive", "UltiDrive\UltiDrive.csproj", "{820D3A3C-1C29-4B0E-8BCA-ADB99CDC7B71}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1202BE1B-9D2F-4B75-B02C-1790FECC2839} = {1202BE1B-9D2F-4B75-B02C-1790FECC2839}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShellLinkTester", "ShellLink\ShellLinkTester.csproj", "{1202BE1B-9D2F-4B75-B02C-1790FECC2839}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,6 +28,16 @@ Global
 		{820D3A3C-1C29-4B0E-8BCA-ADB99CDC7B71}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{820D3A3C-1C29-4B0E-8BCA-ADB99CDC7B71}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{820D3A3C-1C29-4B0E-8BCA-ADB99CDC7B71}.Release|x86.ActiveCfg = Release|Any CPU
+		{1202BE1B-9D2F-4B75-B02C-1790FECC2839}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1202BE1B-9D2F-4B75-B02C-1790FECC2839}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1202BE1B-9D2F-4B75-B02C-1790FECC2839}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{1202BE1B-9D2F-4B75-B02C-1790FECC2839}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{1202BE1B-9D2F-4B75-B02C-1790FECC2839}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1202BE1B-9D2F-4B75-B02C-1790FECC2839}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1202BE1B-9D2F-4B75-B02C-1790FECC2839}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1202BE1B-9D2F-4B75-B02C-1790FECC2839}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{1202BE1B-9D2F-4B75-B02C-1790FECC2839}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{1202BE1B-9D2F-4B75-B02C-1790FECC2839}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

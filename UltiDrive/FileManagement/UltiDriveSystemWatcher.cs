@@ -23,7 +23,7 @@ namespace UltiDrive.FileManagement
             }
         }
 
-        private void AddWatcher(string path)
+        public void AddWatcher(string path)
         {
             FileSystemWatcher watcher = new FileSystemWatcher();
 
@@ -43,7 +43,7 @@ namespace UltiDrive.FileManagement
             WriteXML();
         }
 
-        private void RemoveWatcher(string path)
+        public void RemoveWatcher(string path)
         {
             _watchers.Remove(_watchers.Single(w => w.Path == path));
             _directories.Remove(_directories.Single(d => d.FullName == path));
@@ -55,7 +55,8 @@ namespace UltiDrive.FileManagement
         {
             StringWriter stringWriter = new StringWriter(new System.Text.StringBuilder());
             System.Xml.Serialization.XmlSerializer writer = new System.Xml.Serialization.XmlSerializer(typeof(List<string>));
-            writer.Serialize(stringWriter, _directories);
+            List<string> dirNames = _directories.Select(d => d.FullName).ToList();
+            writer.Serialize(stringWriter, dirNames);
             System.IO.File.WriteAllText(App.AppFolder + "\\Watcher.dat", stringWriter.ToString());
         }
 

@@ -31,8 +31,7 @@ namespace UltiDrive
         private static double _TotalAvailable;
         private static double _TotalUsed;
         public static Task initialize;
-        public static UltiDriveSystemWatcher _watcher;
-        public static FileStructure _structure;
+        public static FileStructure FolderStructure { get { return FileStructure.Index; } }
 
         public static double TotalAvailable
         {
@@ -73,18 +72,6 @@ namespace UltiDrive
             }
         }
 
-        private void NetworkChange_NetworkAvailabilityChanged(object sender, NetworkAvailabilityEventArgs e)
-        {
-            if (!e.IsAvailable)
-            {
-                FancyMsgBoxWindow.Show("Internet Lost", "We will wait in the background until you gain internet again.");
-            }
-            else
-            {
-                FancyMsgBoxWindow.Show("Internet Restored", "Yay! You have internet again.");
-            }
-        }
-
         void App_Startup(object sender, StartupEventArgs e)
         {
             List<StorageInformation> services = new List<StorageInformation>();
@@ -98,7 +85,7 @@ namespace UltiDrive
             }
             else
             {
-                this.StartupUri = new Uri("FancyMainWindow.xaml", UriKind.Relative);
+                this.StartupUri = new Uri("wSettings.xaml", UriKind.Relative);
 
                 if (System.IO.File.Exists(AppFolder + "\\Watcher.dat"))
                 {
@@ -110,7 +97,7 @@ namespace UltiDrive
                     directories = (List<string>)serializer.Deserialize(reader);
 
                     InitializeServices(ref services);
-                    _structure = new FileStructure(directories, services); 
+                    new FileStructure(directories, services);
                 }
             }
 
@@ -249,6 +236,18 @@ namespace UltiDrive
         void App_Exit(object sender, ExitEventArgs e)
         {
             //System.IO.Directory.Delete(AppFolder, true);
+        }
+
+        private void NetworkChange_NetworkAvailabilityChanged(object sender, NetworkAvailabilityEventArgs e)
+        {
+            if (!e.IsAvailable)
+            {
+                FancyMsgBoxWindow.Show("Internet Lost", "We will wait in the background until you gain internet again.");
+            }
+            else
+            {
+                FancyMsgBoxWindow.Show("Internet Restored", "Yay! You have internet again.");
+            }
         }
 
         private void skydrive_checkInitiated(object sender, LiveOperationCompletedEventArgs e)

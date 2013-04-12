@@ -26,5 +26,6 @@ namespace UltiDrive
         }
     
         public DbSet<file> files { get; set; }
+        public DbSet<unmanagedFile> unmanagedFiles { get; set; }
     }
 }

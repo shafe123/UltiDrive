@@ -13,6 +13,8 @@ using Microsoft.Win32;
 using UltiDrive.FileManagement;
 using UltiDrive.GoogleDrive;
 using System.IO;
+using System.Data.Entity.Validation;
+using System.Windows.Forms;
 
 namespace UltiDrive
 {
@@ -108,7 +110,8 @@ namespace UltiDrive
 
         private void ShowUnmanagedFiles_Click(object sender, RoutedEventArgs e)
         {
-            UnmanagedFiles.ItemsSource = FileStructure.Index.UnManagedFiles;
+            indexEntities db = new indexEntities();
+            UnmanagedFiles.ItemsSource = db.unmanagedFiles.Local;
         }
     }
 }
