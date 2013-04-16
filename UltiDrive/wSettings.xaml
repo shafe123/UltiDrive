@@ -32,21 +32,17 @@
 	<Button x:Name="btnClose" Grid.Column="2"  Template="{DynamicResource CloseBtnTempl1}"  ToolTip="Close" Click="btnClose_Click" Margin="10,2,5,2"/>-->
             </Grid>
 
-            <CheckBox Grid.Row="1" Content="Start UltiDrive on Windows startup" Height="16" HorizontalAlignment="Left" Margin="31.5,10,0,0" x:Name="chkStartOnWSU" VerticalAlignment="Top" Foreground="#FF9BD2F1" Checked="chkStartOnWSU_Checked" Unchecked="chkStartOnWSU_Unchecked" />
+            <CheckBox Grid.Row="1" Content="Start UltiDrive on Windows startup" Height="16" HorizontalAlignment="Left" Margin="295,164,0,0" x:Name="chkStartOnWSU" VerticalAlignment="Top" Foreground="#FF9BD2F1" Checked="chkStartOnWSU_Checked" Unchecked="chkStartOnWSU_Unchecked" />
             <Button x:Name="btnResetAll" Content="Disconnect All" HorizontalAlignment="Left" Margin="10,0,0,10" Grid.Row="1" Template="{DynamicResource SettingsWindowBtnTemplate}" Foreground="#FFF0F0F0" FontSize="14.667" Click="btnResetAll_Click" Height="31" VerticalAlignment="Bottom" />
             <Button x:Name="btnCancel" Content="Cancel" Margin="0,0,8,10" Grid.Row="1" Template="{DynamicResource SettingsWindowBtnTemplate}" Foreground="#FFF0F0F0" FontSize="14.667" Click="btnCancel_Click" RenderTransformOrigin="0.624,2.73" Height="32" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="71"/>
             <Button x:Name="btnSaveChanges" Content="Save Changes" Margin="0,0,84,10" Grid.Row="1" RenderTransformOrigin="2.187,1.412" Template="{DynamicResource SettingsWindowBtnTemplate}" Foreground="#FFF0F0F0" FontSize="14.667" Click="btnSaveChanges_Click" Height="31" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="96"/>
-            <ListView x:Name="lstRootFolders" Height="100" Margin="295,10,0,0" Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Left" Width="100">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn/>
-                    </GridView>
-                </ListView.View>
-            </ListView>
-            <Button x:Name="AddRoot" Content="Add Folder" HorizontalAlignment="Left" Margin="295,115,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="AddRoot_Click"/>
-            <Button x:Name="RemRoot" Content="Rem Folder" HorizontalAlignment="Left" Margin="295,140,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="RemRoot_Click"/>
-
-
+            <ListBox x:Name="lstRootFolders" Height="100" Margin="295,10,0,0" Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Left" Width="273" />
+            <Button x:Name="AddRoot" Content="Add Folder" HorizontalAlignment="Left" Margin="493,114,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="AddRoot_Click"/>
+            <Button x:Name="RemRoot" Content="Rem Folder" HorizontalAlignment="Left" Margin="493,139,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="RemRoot_Click"/>
+            <CheckBox Name="cbSkydrive" Content="SkyDrive" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="125" Checked="cbSkydrive_Checked" Unchecked="cbSkydrive_Unchecked"/>
+            <CheckBox Name="cbGoogleDrive" Content="Google Drive" HorizontalAlignment="Left" Margin="10,30,0,0" Grid.Row="1" VerticalAlignment="Top" Checked="cbGoogleDrive_Checked" Unchecked="cbGoogleDrive_Unchecked"/>
+            <CheckBox Name="cbDropbox" Content="Dropbox" HorizontalAlignment="Left" Margin="10,50,0,0" Grid.Row="1" VerticalAlignment="Top" Checked="cbDropbox_Checked" Unchecked="cbDropbox_Unchecked" />
+            <CheckBox Name="cbBox" Content="Box" HorizontalAlignment="Left" Margin="10,70,0,0" Grid.Row="1" VerticalAlignment="Top" Checked="cbBox_Checked" Unchecked="cbBox_Unchecked" />
         </Grid>
     </Border>
 </Window>

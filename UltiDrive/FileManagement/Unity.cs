@@ -143,8 +143,6 @@ namespace UltiDrive.FileManagement
 
         public static string UploadFile(file newFile)
         {
-            indexEntities db = new indexEntities();
-            
             StorageServices service = (StorageServices)Enum.Parse(typeof(StorageServices), newFile.service);
             try
             {
@@ -173,6 +171,12 @@ namespace UltiDrive.FileManagement
             {
                 return "Failure";
             }
+        }
+
+        public static string MoveService(file f, StorageServices newService)
+        {
+            f.service = Enum.GetName(typeof(StorageServices), newService);
+            return UploadFile(f);
         }
 
         public static bool DownloadFile(string guid, string downloadLocation)

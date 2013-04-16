@@ -48,23 +48,7 @@ namespace UltiDrive.Setup
                 switch (service)
                 {
                     case StorageServices.SkyDrive:
-                        LoginPage.Site = StorageServices.SkyDrive;
-                        LoginPage.SigningIn = true;
-                        LoginPage newWindow = new LoginPage();
-                        newWindow.ShowDialog();
-
-                        SkyDrive.Utilities.WriteSkyDriveSettings();
-
-                        if (SkyDrive.Properties.LoggedIn)
-                        {
-                            SkyDrive.Properties.Quota qt = SkyDrive.Api.GetQuota();
-                            services.Add(new StorageInformation(StorageServices.SkyDrive,
-                                qt.quota - qt.available, qt.quota));
-
-                            //INITIALIZE SKYDRIVE
-                            SkyDrive.Utilities.checkSkyDriveInitiatedStart(null, null);
-                            //END INITIALIZE SKYDRIVE
-                        }
+                        SkyDrive.Api.Login(false);
                         break;
                     //case StorageServices.UbuntuOne:
                     //    new UbuntuOne.UbuntuOneSignInWindow().ShowDialog();
@@ -77,17 +61,7 @@ namespace UltiDrive.Setup
                     //    }
                     //    break;
                     case StorageServices.GoogleDrive:
-                        LoginPage.Site = StorageServices.GoogleDrive;
-                        LoginPage.SigningIn = true;
-                        LoginPage newWindow2 = new LoginPage();
-                        newWindow2.ShowDialog();
-
-                        if (GoogleDriveRefreshInfo.Instance.LoggedIn)
-                        {
-                            GoogleDrive.Quota qt = GoogleDrive.Api.GetQuota();
-                            services.Add(new StorageInformation(StorageServices.GoogleDrive,
-                                qt.quotaBytesUsed, qt.quotaBytesTotal));
-                        }
+                        GoogleDrive.Api.Login(false);
                         break;
                     case StorageServices.Dropbox:
                         //DropboxApi.Api.Login();
@@ -104,7 +78,7 @@ namespace UltiDrive.Setup
                         }
                         break;
                     case StorageServices.Box:
-                        Box.Api.Login(true);
+                        Box.Api.Login(false);
 
                         if (Box.BoxProperties.LoggedIn)
                         {
